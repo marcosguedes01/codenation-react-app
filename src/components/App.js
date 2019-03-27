@@ -8,22 +8,31 @@ class App extends Component {
     super(props);
 
     this.state = {
-      searchString: ''
+      searchString: '',
+      results: recipes.results
     };
 
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentDidMount()
+  {
     this.getData();
   }
 
   getData(){
-    let searchString = this.state.searchString || "";
+    let searchString = (this.state.searchString || "").trim();
     
-    this.recipes = recipes.results.filter((recipe) => {
-      let propertiesFilter = recipe.title.toLowerCase() + recipe.ingredients.toLowerCase()
-      return propertiesFilter.indexOf(
-        searchString.toLowerCase()
-      ) !== -1
-    }).map((result, i) =>
+    this.setState({
+      results: recipes.results.filter((recipe) => {
+        let propertiesFilter = recipe.title.toLowerCase() + recipe.ingredients.toLowerCase()
+        return propertiesFilter.indexOf(
+          searchString.toLowerCase()
+        ) !== -1
+      })}
+    )
+
+    this.recipes = this.state.results.map((result, i) =>
       <RecipeItem key={i} thumbnail={result.thumbnail} 
         title={this.getHighlightedText(result.title, this.state.searchString)} 
         ingredients={this.getHighlightedText(result.ingredients, this.state.searchString)} />
@@ -31,15 +40,16 @@ class App extends Component {
   }
 
   getHighlightedText(text, higlight) {
-    // Split text on higlight term, include term itself into parts, ignore case
     var parts = text.split(new RegExp(`(${higlight})`, 'gi'));
-    return <span>{parts.map(part => part.toLowerCase() === higlight.toLowerCase() ? <mark>{part}</mark> : part)}</span>;
+    return <span>{parts.map(part => part.toLowerCase() === higlight.toLowerCase() ? <mark key={Math.random()}>{part}</mark> : part)}</span>;
   }
 
   handleChange(event) {
-    this.setState({searchString: event.target.value});
-
-    this.getData();
+    this.setState({
+      searchString: event.target.value
+    }, () => {
+      this.getData()      
+    })
   }
 
   render() { 
