@@ -24,8 +24,16 @@ class App extends Component {
         searchString.toLowerCase()
       ) !== -1
     }).map((result, i) =>
-      <RecipeItem key={i} result={result} />
+      <RecipeItem key={i} thumbnail={result.thumbnail} 
+        title={this.getHighlightedText(result.title, this.state.searchString)} 
+        ingredients={this.getHighlightedText(result.ingredients, this.state.searchString)} />
     );
+  }
+
+  getHighlightedText(text, higlight) {
+    // Split text on higlight term, include term itself into parts, ignore case
+    var parts = text.split(new RegExp(`(${higlight})`, 'gi'));
+    return <span>{parts.map(part => part.toLowerCase() === higlight.toLowerCase() ? <mark>{part}</mark> : part)}</span>;
   }
 
   handleChange(event) {
