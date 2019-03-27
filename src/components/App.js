@@ -11,16 +11,27 @@ class App extends Component {
       searchString: ''
     };
 
-    this.recipes = recipes.results.map((result, i) =>
+    this.handleChange = this.handleChange.bind(this);
+    this.getData();
+  }
+
+  getData(){
+    let searchString = this.state.searchString || "";
+    
+    this.recipes = recipes.results.filter((recipe) => {
+      let propertiesFilter = recipe.title.toLowerCase() + recipe.ingredients.toLowerCase()
+      return propertiesFilter.indexOf(
+        searchString.toLowerCase()
+      ) !== -1
+    }).map((result, i) =>
       <RecipeItem key={i} result={result} />
     );
-
-    this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(event) {
     this.setState({searchString: event.target.value});
-    //console.log(this.state.searchString)
+
+    this.getData();
   }
 
   render() { 
