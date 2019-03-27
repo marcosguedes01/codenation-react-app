@@ -55,7 +55,7 @@ class App extends Component {
   render() { 
     return (
       <div className="App">
-        <Navbar state={this.state} handleChange={this.handleChange} />
+        <Navbar searchString={this.state.searchString} handleChange={this.handleChange} />
         <div className="container mt-10">
           <div className="row">
             {this.recipes}

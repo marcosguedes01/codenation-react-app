@@ -1,4 +1,0 @@
-
-> test_files@0.1.0 test C:\Users\marcos.guedes\codenation\react-0
-> cross-env CI=true react-scripts test --env=jsdom
-
